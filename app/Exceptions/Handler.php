@@ -34,43 +34,45 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $e)
     {
-        \Log::channel("error")->error("Error Handling", [
-            "message" => $e->getMessage(),
-            "code" => $e->getCode(),
-            "file" => $e->getFile(),
-            "line" => $e->getLine(),
-            "tract" => $e->getTraceAsString()
-        ]);
+        if ($request->expectsJson()) {
+            \Log::channel("error")->error("Error Handling", [
+                "message" => $e->getMessage(),
+                "code" => $e->getCode(),
+                "file" => $e->getFile(),
+                "line" => $e->getLine(),
+                "tract" => $e->getTraceAsString()
+            ]);
 
-        $http = [
-            422 => "Unprocessable Entity",
-            404 => "Not Found"
-        ];
+            $http = [
+                422 => "Unprocessable Entity",
+                404 => "Not Found"
+            ];
 
-        if ($e instanceof ValidationException) {
-            return response()->json([
-                'status' => "Validation Error",
-                "message" => "Failed to validate your request",
-                "errors" => $e->validator->errors()->all()
-            ], Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
-        else if ($e instanceof AuthenticationException) {
-            return response()->json([
-                'status' => "Unauthorized",
-                "message" => $e->getMessage(),
-            ], Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
-        else if ($e instanceof UniqueConstraintViolationException) {
-            return response()->json([
-                'status' => "Conflict",
-                "message" => $e->getMessage(),
-            ], Response::HTTP_CONFLICT);
-        }
-        else {
-            return response()->json([
-                'status' => !empty($http[$e->getCode()]) ? $http[$e->getCode()] : "Internal Server Error",
-                "message" => $e->getMessage(),
-            ], $e->getCode() > 100 && $e->getCode() < 600 ? $e->getCode() : Response::HTTP_INTERNAL_SERVER_ERROR);
+            if ($e instanceof ValidationException) {
+                return response()->json([
+                    'status' => "Validation Error",
+                    "message" => "Failed to validate your request",
+                    "errors" => $e->validator->errors()->all()
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
+            else if ($e instanceof AuthenticationException) {
+                return response()->json([
+                    'status' => "Unauthorized",
+                    "message" => $e->getMessage(),
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
+            else if ($e instanceof UniqueConstraintViolationException) {
+                return response()->json([
+                    'status' => "Conflict",
+                    "message" => $e->getMessage(),
+                ], Response::HTTP_CONFLICT);
+            }
+            else {
+                return response()->json([
+                    'status' => !empty($http[$e->getCode()]) ? $http[$e->getCode()] : "Internal Server Error",
+                    "message" => $e->getMessage(),
+                ], $e->getCode() > 100 && $e->getCode() < 600 ? $e->getCode() : Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
         }
 
         return parent::render($request, $e);

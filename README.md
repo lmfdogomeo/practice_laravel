@@ -64,7 +64,16 @@ Before you begin the installation process, make sure you have the following soft
 
     php artisan serve --port=5001
     ```
-    
+
+- To create user using command
+    ```bash
+    php artisan app:create-user {fullname} {email} {password}
+
+    # example
+
+    php artisan app:create-user "Super Admin" "admin@test.com" "password"
+    ```
+
 
 ### To connect to the database
 - Open your Database Management Application
