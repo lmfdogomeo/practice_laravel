@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\MerchantController;
+use App\Livewire\Counter;
+use App\Livewire\MerchantComponent;
+use App\Livewire\ProductComponent;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,7 +18,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    // return view('welcome');
+    return redirect("login");
 });
 
 Route::middleware([
@@ -25,4 +30,17 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
+
+    Route::get('/merchants', MerchantComponent::class)->name('merchant');
+    Route::get('/products', ProductComponent::class)->name('product');
+
+    // Route::get('/merchants', function () {
+    //     return view("product");
+    // })->name('merchant');
+
+    // Route::get('/products', function () {
+    //     return view("product");
+    // })->name('product');
 });
+
+Route::get('/counter', Counter::class);

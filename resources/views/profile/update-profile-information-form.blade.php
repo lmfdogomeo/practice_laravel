@@ -52,10 +52,10 @@
             </div>
         @endif
 
-        <!-- Name -->
+        <!-- Full Name -->
         <div class="col-span-6 sm:col-span-4">
-            <x-label for="name" value="{{ __('Name') }}" />
-            <x-input id="name" type="text" class="mt-1 block w-full" wire:model="state.name" required autocomplete="name" />
+            <x-label for="name" value="{{ __('Full Name') }}" />
+            <x-input id="name" type="text" class="mt-1 block w-full" wire:model="state.fullname" required autocomplete="name" />
             <x-input-error for="name" class="mt-2" />
         </div>
 
@@ -80,6 +80,13 @@
                     </p>
                 @endif
             @endif
+        </div>
+
+        <!-- Role -->
+        <div class="col-span-6 sm:col-span-4">
+            <x-label for="role" value="{{ __('Role') }}" />
+            <x-input id="role" type="text" class="mt-1 block w-full" wire:model="state.role" required autocomplete="role" disabled />
+            <x-input-error for="role" class="mt-2" />
         </div>
     </x-slot>
 
